@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trắc Nghiệm Định Hướng Ngành IT</title>
+    
+    <!-- Google Fonts: Đồng nhất Be Vietnam Pro (dễ đọc tiếng Việt tuyệt đối) + JetBrains Mono cho số liệu -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap 5 Grid & Utilities -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- NỀN LƯỚI KIẾN TRÚC VUÔNG GÓC & LUỒNG CHUYỂN ĐỘNG TƯƠNG TÁC (ORTHOGONAL GRID CANVAS) -->
+    <canvas id="bgGridCanvas" class="bg-grid-canvas" aria-hidden="true"></canvas>
+
+    <!-- NỀN LƯỚI KIẾN TRÚC VUÔNG GÓC & LUỒNG CHUYỂN ĐỘNG TƯƠNG TÁC (ORTHOGONAL GRID CANVAS) -->
+    <canvas id="bgGridCanvas" class="bg-grid-canvas" aria-hidden="true"></canvas>
+
+    <div class="container page-container py-4 py-md-5">
+        
+        <!-- TOP HEADER -->
+        <header class="masthead mb-4">
+            <div class="d-flex flex-wrap justify-content-between align-items-center masthead-meta pb-2 mb-3">
+                <span>Bài tập thực hành Lập trình Web - Nhóm 6</span>
+                <span>10 câu hỏi tình huống</span>
+            </div>
+            <h1 class="masthead-title">Bản Đồ Định Hướng Ngành IT</h1>
+            <p class="masthead-subtitle mb-0">
+                Khám phá vị trí phù hợp nhất với bạn trong đội ngũ phát triển sản phẩm qua 10 tình huống phản xạ thực tế.
+            </p>
+        </header>
+
+        <!-- KHUNG BÀI TEST CHÍNH -->
+        <main class="paper-box">
+            
+            <!-- THANH TIẾN TRÌNH -->
+            <div class="editorial-bar" id="progressSection">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="step-pill" id="questionCode">01</span>
+                    <span class="step-label" id="questionStepText">Câu hỏi 1 trên 10</span>
+                </div>
+                
+                <!-- 10 Vạch tiến trình -->
+                <div class="step-segments" id="stepSegments">
+                    <span class="seg active"></span>
+                    <span class="seg"></span>
+                    <span class="seg"></span>
+                    <span class="seg"></span>
+                    <span class="seg"></span>
+                    <span class="seg"></span>
+                    <span class="seg"></span>
+                    <span class="seg"></span>
+                    <span class="seg"></span>
+                    <span class="seg"></span>
+                </div>
+            </div>
+
+            <!-- NỘI DUNG CÂU HỎI -->
+            <div class="paper-body" id="quizBody">
+                
+                <div class="question-slide-stage" id="questionSlideStage">
+                    <div class="question-header mb-4">
+                        <h2 class="question-title" id="questionTitle">
+                            Đang tải câu hỏi...
+                        </h2>
+                    </div>
+
+                    <!-- DANH SÁCH 4 ĐÁP ÁN -->
+                    <div class="options-stack mb-4" id="optionsContainer">
+                        <!-- Render từ JS -->
+                    </div>
+                </div>
+
+                <!-- THÔNG BÁO NHẮC CHỌN CÂU TRẢ LỜI (Hiệu ứng jQuery slideDown / slideUp) -->
+                <div class="warning-strip mb-3" id="selectionWarning" style="display: none;">
+                    <span>Vui lòng chọn một phương án trước khi chuyển sang câu tiếp theo.</span>
+                </div>
+
+                <!-- THANH ĐIỀU HƯỚNG DƯỚI CÙNG -->
+                <div class="nav-footer d-flex flex-wrap justify-content-between align-items-center pt-3">
+                    <button type="button" class="btn-tactile btn-tactile-light" id="btnPrev" disabled>
+                        &larr; Câu trước
+                    </button>
+
+                    <span class="kbd-hint d-none d-md-inline">
+                        Nhấn phím <strong>A, B, C, D</strong> để chọn nhanh
+                    </span>
+
+                    <div>
+                        <button type="button" class="btn-tactile btn-tactile-primary" id="btnNext">
+                            Câu tiếp theo &rarr;
+                        </button>
+                        <button type="button" class="btn-tactile btn-tactile-submit d-none" id="btnSubmit">
+                            Xem kết quả phân tích &#10003;
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- MÀN HÌNH KẾT QUẢ (BỐ CỤC TÀI LIỆU PHẲNG, TỰ NHIÊN, KHÔNG DÙNG HỘP CALLOUT AI) -->
+            <div class="paper-body d-none" id="resultCard">
+                
+                <!-- KHỐI 1: TIÊU ĐỀ KẾT QUẢ TRỰC TIẾP TRÊN NỀN GIẤY -->
+                <div class="result-header pb-4 mb-4">
+                    <p class="result-lead-label mb-1">Hướng chuyên môn phù hợp nhất với bạn</p>
+                    <h2 class="dossier-role mb-3" id="resultTitle">Frontend Engineer</h2>
+                    <p class="dossier-text mb-0" id="resultDescription">Mô tả...</p>
+                </div>
+
+                <!-- KHỐI 2: TỶ LỆ TƯƠNG THÍCH & PHÂN TÍCH HÀNH VI -->
+                <div class="row g-4 pb-4 mb-4 result-split-section">
+                    
+                    <!-- Cột trái: Điểm mạnh rút ra từ câu trả lời -->
+                    <div class="col-12 col-md-7 result-col-left">
+                        <h3 class="block-heading mb-3">Điểm nổi bật từ cách bạn xử lý tình huống</h3>
+                        <ul class="personal-traits-list list-unstyled mb-4" id="personalInsightsBox">
+                            <!-- Render từ JS -->
+                        </ul>
+
+                        <h3 class="block-heading mb-2">Góc nhìn cần bổ sung khi làm việc nhóm</h3>
+                        <p class="blindspot-p mb-0" id="blindSpotText">
+                            Điểm mù...
+                        </p>
+                    </div>
+
+                    <!-- Cột phải: Thống kê tỷ lệ lựa chọn -->
+                    <div class="col-12 col-md-5 result-col-right">
+                        <h3 class="block-heading mb-3">Tỷ lệ tương thích theo nhóm ngành</h3>
+                        
+                        <div class="stat-row mb-3">
+                            <div class="d-flex justify-content-between mono-stat mb-1">
+                                <span>Frontend (Giao diện)</span>
+                                <span id="scoreFrontendText">0%</span>
+                            </div>
+                            <div class="meter-track">
+                                <div class="meter-fill" id="barFrontend" style="width: 0%;"></div>
+                            </div>
+                        </div>
+
+                        <div class="stat-row mb-3">
+                            <div class="d-flex justify-content-between mono-stat mb-1">
+                                <span>Backend (Hệ thống)</span>
+                                <span id="scoreBackendText">0%</span>
+                            </div>
+                            <div class="meter-track">
+                                <div class="meter-fill" id="barBackend" style="width: 0%;"></div>
+                            </div>
+                        </div>
+
+                        <div class="stat-row mb-3">
+                            <div class="d-flex justify-content-between mono-stat mb-1">
+                                <span>UI/UX (Trải nghiệm)</span>
+                                <span id="scoreUiuxText">0%</span>
+                            </div>
+                            <div class="meter-track">
+                                <div class="meter-fill" id="barUiux" style="width: 0%;"></div>
+                            </div>
+                        </div>
+
+                        <div class="stat-row">
+                            <div class="d-flex justify-content-between mono-stat mb-1">
+                                <span>Data &amp; AI (Dữ liệu)</span>
+                                <span id="scoreDataText">0%</span>
+                            </div>
+                            <div class="meter-track">
+                                <div class="meter-fill" id="barData" style="width: 0%;"></div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 pt-3 border-top">
+                            <button type="button" class="btn-history-toggle" id="btnToggleHistory">
+                                <span>Xem lại 10 đáp án đã chọn</span>
+                                <span class="toggle-arrow" id="historyArrow">&#9662;</span>
+                            </button>
+                            <div id="choicesCollapseBox" style="display: none;">
+                                <div class="d-flex flex-wrap gap-1 pt-2" id="userChoicesList"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KHỐI 3: LỘ TRÌNH CÔNG NGHỆ -->
+                <div class="pb-4 mb-4 border-bottom">
+                    <h3 class="block-heading mb-3">Kiến thức &amp; công cụ gợi ý tìm hiểu trước</h3>
+                    <div class="d-flex flex-wrap gap-2" id="techStackBadges">
+                        <!-- Render từ JS -->
+                    </div>
+                </div>
+
+                <!-- Nút thao tác lại -->
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+                    <button type="button" class="btn-tactile btn-tactile-primary" id="btnRestart">
+                        &#8634; Làm lại bài trắc nghiệm
+                    </button>
+                    <button type="button" class="btn-tactile btn-tactile-light" onclick="window.print()">
+                        In kết quả
+                    </button>
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+    <!-- jQuery & Custom Script -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>

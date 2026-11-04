@@ -1,0 +1,588 @@
+/* 
+   Style: High-Legibility Editorial UI (Rõ ràng, Dễ đọc, Phân cấp thị giác mạch lạc)
+   Typography: Be Vietnam Pro (100% tối ưu dấu tiếng Việt) + JetBrains Mono (Số liệu)
+*/
+
+:root {
+    --bg-page: #edeae0;
+    --bg-card: #ffffff;
+    --bg-bar: #ebe9e1;
+    --ink-strong: #141413;
+    --ink-body: #2c2b29;
+    --ink-secondary: #575551;
+    --ink-muted: #78756f;
+    --border-main: #d4d1c7;
+    --line-subtle: #dedbd2;
+    --border-strong: #2c2b29;
+    --accent: #164e3a;        /* Xanh rừng đậm sắc nét, tương phản cao */
+    --accent-soft: #eef5f2;
+    --accent-border: #9ec5b5;
+}
+
+body {
+    position: relative;
+    font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg-page);
+    background-image: 
+        radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.72), transparent 65%),
+        radial-gradient(circle at 90% 15%, rgba(22, 78, 58, 0.08), transparent 40%),
+        radial-gradient(circle at 10% 85%, rgba(22, 78, 58, 0.07), transparent 42%);
+    color: var(--ink-body);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+
+/* ==========================================================================
+   0. BACKGROUND LƯỚI KIẾN TRÚC VUÔNG GÓC TƯƠNG TÁC (ORTHOGONAL GRID CANVAS)
+   ========================================================================== */
+.bg-grid-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    display: block;
+}
+
+.page-container {
+    position: relative;
+    z-index: 1;
+    max-width: 820px;
+}
+
+/* Hiệu ứng xuất hiện nhẹ nhàng khi tải trang */
+@keyframes sheetEntrance {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 1. HEADER TRANG */
+.masthead {
+    animation: sheetEntrance 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.masthead-meta {
+    border-bottom: 1px solid var(--border-main);
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ink-muted);
+}
+
+.masthead-title {
+    font-weight: 800;
+    font-size: 2.15rem;
+    letter-spacing: -0.025em;
+    line-height: 1.25;
+    color: var(--ink-strong);
+    margin-bottom: 0.4rem;
+}
+
+.masthead-subtitle {
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--ink-secondary);
+    line-height: 1.6;
+}
+
+/* 2. KHUNG BÀI TRẮC NGHIỆM CHÍNH (Hiệu ứng tờ giấy xếp lớp trên bàn) */
+.paper-box {
+    position: relative;
+    background-color: var(--bg-card);
+    border: 1.5px solid #b8b4a9;
+    border-radius: 10px;
+    box-shadow: 
+        0 4px 0 -1.5px #faf9f5,
+        0 4px 0 0 #c5c1b6,
+        0 18px 38px -12px rgba(20, 20, 19, 0.11);
+    overflow: hidden;
+    animation: sheetEntrance 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.06s both;
+}
+
+/* Thanh trạng thái phía trên */
+.editorial-bar {
+    background-color: var(--bg-bar);
+    padding: 0.9rem 1.75rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-main);
+}
+
+.step-pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    font-weight: 700;
+    background-color: var(--accent);
+    color: #ffffff;
+    padding: 3px 9px;
+    border-radius: 4px;
+    transition: transform 0.2s ease;
+}
+
+.step-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ink-strong);
+}
+
+/* 10 Vạch tiến trình có hiệu ứng giãn mượt ở câu hiện tại */
+.step-segments {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.step-segments .seg {
+    width: 15px;
+    height: 6px;
+    background-color: #d0ccc2;
+    border-radius: 3px;
+    transition: width 0.32s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.25s ease, opacity 0.25s ease;
+}
+
+.step-segments .seg.done {
+    background-color: var(--accent);
+    opacity: 0.5;
+}
+
+.step-segments .seg.active {
+    width: 26px;
+    background-color: var(--accent);
+    opacity: 1;
+}
+
+/* Thân khung */
+.paper-body {
+    padding: 2rem 2.25rem;
+}
+
+@keyframes slideFromRight {
+    from {
+        opacity: 0;
+        transform: translateX(22px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideFromLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-22px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.question-slide-stage.slide-in-next {
+    animation: slideFromRight 0.34s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.question-slide-stage.slide-in-prev {
+    animation: slideFromLeft 0.34s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.question-title {
+    font-weight: 700;
+    font-size: 1.32rem;
+    line-height: 1.5;
+    color: var(--ink-strong);
+    margin: 0;
+    animation: calmFadeUp 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* 3. DANH SÁCH 4 PHƯƠNG ÁN TRẢ LỜI */
+@keyframes calmFadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes keycapPop {
+    0% { transform: scale(1); }
+    45% { transform: scale(0.88); }
+    100% { transform: scale(1); }
+}
+
+.options-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.option-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background-color: #ffffff;
+    border: 1.5px solid #d4d1c7;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease;
+    user-select: none;
+    animation: calmFadeUp 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.option-card:nth-child(1) { animation-delay: 20ms; }
+.option-card:nth-child(2) { animation-delay: 55ms; }
+.option-card:nth-child(3) { animation-delay: 90ms; }
+.option-card:nth-child(4) { animation-delay: 125ms; }
+
+.option-card:hover {
+    border-color: #78756f;
+    background-color: #faf9f6;
+    transform: translateX(3px);
+}
+
+.option-card:active {
+    transform: translateX(3px) scale(0.995);
+}
+
+.option-card.selected {
+    background-color: var(--accent-soft);
+    border-color: var(--accent);
+    transform: translateX(3px);
+    box-shadow: 0 3px 10px rgba(22, 78, 58, 0.08);
+}
+
+/* Phím A, B, C, D rõ nét */
+.keycap {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 0.86rem;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f3f2ee;
+    color: var(--ink-strong);
+    border: 1.5px solid #b8b4a9;
+    border-radius: 6px;
+    box-shadow: 0 1px 0 #b8b4a9;
+    transition: all 0.16s ease;
+}
+
+.option-card:hover .keycap {
+    border-color: var(--ink-strong);
+}
+
+.option-card.selected .keycap {
+    background-color: var(--accent);
+    border-color: var(--accent);
+    box-shadow: 0 1px 0 #0d3225;
+    color: #ffffff;
+    animation: keycapPop 0.22s ease;
+}
+
+.option-text {
+    font-size: 0.98rem;
+    font-weight: 400;
+    line-height: 1.55;
+    color: var(--ink-body);
+}
+
+.option-card.selected .option-text {
+    font-weight: 600;
+    color: var(--ink-strong);
+}
+
+/* Thông báo nhắc chọn đáp án */
+.warning-strip {
+    font-size: 0.9rem;
+    font-weight: 500;
+    background-color: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+    padding: 0.65rem 1rem;
+    border-radius: 6px;
+}
+
+/* 4. NÚT BẤM ĐIỀU HƯỚNG */
+.nav-footer {
+    border-top: 1px solid var(--border-main);
+}
+
+.kbd-hint {
+    font-size: 0.82rem;
+    color: var(--ink-muted);
+}
+
+.btn-tactile {
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-weight: 600;
+    font-size: 0.92rem;
+    padding: 0.65rem 1.35rem;
+    border-radius: 6px;
+    border: 1.5px solid var(--border-strong);
+    cursor: pointer;
+    transition: transform 0.14s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn-tactile:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.btn-tactile:hover:not(:disabled) {
+    transform: translateY(-1px);
+}
+
+.btn-tactile:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.btn-tactile-light {
+    background-color: #ffffff;
+    color: var(--ink-body);
+    border-color: #b8b4a9;
+}
+
+.btn-tactile-light:hover:not(:disabled) {
+    border-color: var(--ink-strong);
+    color: var(--ink-strong);
+    background-color: #f7f6f2;
+}
+
+.btn-tactile-primary,
+.btn-tactile-submit {
+    background-color: var(--accent);
+    color: #ffffff;
+    border-color: var(--accent);
+    box-shadow: 0 2px 6px rgba(22, 78, 58, 0.16);
+}
+
+.btn-tactile-primary:hover:not(:disabled),
+.btn-tactile-submit:hover:not(:disabled) {
+    background-color: #113c2d;
+    border-color: #113c2d;
+    box-shadow: 0 4px 12px rgba(22, 78, 58, 0.22);
+}
+
+/* 5. MÀN HÌNH KẾT QUẢ (BỐ CỤC TÀI LIỆU PHẲNG, TỰ NHIÊN, DỄ ĐỌC) */
+
+/* Khối mở đầu kết quả: phẳng trực tiếp trên trang giấy, ngăn cách bằng đường kẻ mảnh */
+.result-header {
+    border-bottom: 1px solid var(--line-subtle);
+}
+
+.result-lead-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--ink-muted);
+}
+
+.dossier-role {
+    font-weight: 800;
+    font-size: 1.75rem;
+    color: var(--ink-strong);
+    line-height: 1.28;
+    letter-spacing: -0.025em;
+}
+
+.dossier-text {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--ink-body);
+    max-width: 68ch;
+}
+
+/* Khu vực chia 2 cột phân tích & thống kê */
+.result-split-section {
+    border-bottom: 1px solid var(--line-subtle);
+}
+
+@media (min-width: 768px) {
+    .result-col-left {
+        padding-right: 2rem;
+    }
+    .result-col-right {
+        border-left: 1px solid var(--line-subtle);
+        padding-left: 2rem;
+    }
+}
+
+.block-heading {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--ink-strong);
+    letter-spacing: -0.01em;
+}
+
+/* Danh sách 3 phản xạ cá nhân: trình bày dạng danh sách phẳng sạch sẽ */
+.personal-traits-list {
+    margin: 0;
+    padding: 0;
+}
+
+.trait-item {
+    position: relative;
+    padding-left: 1.15rem;
+    padding-bottom: 0.75rem;
+    margin-bottom: 0.75rem;
+    border-bottom: 1px dashed #e5e2d9;
+    font-size: 0.94rem;
+    line-height: 1.6;
+    color: var(--ink-body);
+}
+
+.trait-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.trait-item::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--accent);
+    font-weight: 700;
+}
+
+.trait-item .trait-ref {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--ink-muted);
+    margin-left: 4px;
+}
+
+.blindspot-p {
+    font-size: 0.94rem;
+    line-height: 1.65;
+    color: var(--ink-secondary);
+}
+
+/* Bảng thống kê tỷ lệ % */
+.mono-stat {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--ink-secondary);
+}
+
+.mono-stat.stat-top {
+    font-weight: 700;
+    color: var(--ink-strong);
+}
+
+.mono-stat span:last-child {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+}
+
+.meter-track {
+    width: 100%;
+    height: 8px;
+    background-color: #ebe8df;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.meter-fill {
+    height: 100%;
+    width: 0%;
+    background-color: #b5b2a8;
+    border-radius: 4px;
+    transition: width 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.meter-fill.fill-dominant {
+    background-color: var(--accent);
+}
+
+/* Nhãn công nghệ đề xuất */
+.tech-tag {
+    font-size: 0.88rem;
+    font-weight: 500;
+    background-color: #f7f6f2;
+    color: var(--ink-strong);
+    border: 1px solid #d8d5cc;
+    padding: 0.35rem 0.8rem;
+    border-radius: 6px;
+    transition: border-color 0.16s ease, background-color 0.16s ease, transform 0.16s ease;
+}
+
+.tech-tag:hover {
+    border-color: var(--accent);
+    background-color: var(--accent-soft);
+    transform: translateY(-1px);
+}
+
+/* Nút đóng/mở lịch sử 10 câu trả lời (jQuery slideToggle) */
+.btn-history-toggle {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--ink-secondary);
+    cursor: pointer;
+    transition: color 0.15s ease;
+}
+
+.btn-history-toggle:hover {
+    color: var(--accent);
+}
+
+.toggle-arrow {
+    display: inline-block;
+    font-size: 0.82rem;
+    transition: transform 0.22s ease;
+}
+
+.toggle-arrow.open {
+    transform: rotate(180deg);
+}
+
+/* Lịch sử 10 câu trả lời */
+.choice-pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    font-weight: 500;
+    background-color: #f7f6f2;
+    color: var(--ink-secondary);
+    border: 1px solid #e2dfd6;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+@media (max-width: 576px) {
+    .masthead-title { font-size: 1.7rem; }
+    .paper-body { padding: 1.35rem; }
+    .question-title { font-size: 1.18rem; }
+    .dossier-role { font-size: 1.4rem; }
+}
+
+@media print {
+    body { background: #fff; }
+    .bg-grid-canvas, .editorial-bar, #btnRestart { display: none !important; }
+    .paper-box { box-shadow: none; }
+}
